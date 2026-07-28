@@ -451,9 +451,50 @@ footer { border-top:1px solid rgba(139,124,246,0.16); padding:36px 0 44px; margi
   .burger { display:block; }
   .preis-karte.hervor { transform:none; }
 }
+
+/* ---------- Auth (Login/Registrierung) ---------- */
+.nav-auth { display:flex; align-items:center; gap:10px; margin-left:6px; }
+.nav-auth-pill {
+  display:flex; align-items:center; gap:8px; background:rgba(139,124,246,0.10);
+  border:1.5px solid rgba(139,124,246,0.22); border-radius:999px; padding:6px 8px 6px 14px;
+  font-size:0.85rem; font-weight:600; color:var(--tinte);
+}
+.nav-auth-pill .aa-email { max-width:150px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.nav-auth-pill button {
+  border:none; background:rgba(255,255,255,0.7); color:var(--lavendel-tief); font-weight:700;
+  font-size:0.78rem; padding:6px 12px; border-radius:999px;
+}
+.auth-overlay {
+  position:fixed; inset:0; z-index:200; background:rgba(46,35,80,0.38); backdrop-filter:blur(4px);
+  display:none; align-items:center; justify-content:center; padding:20px;
+}
+.auth-overlay.offen { display:flex; }
+.auth-karte {
+  background:#fff; border-radius:var(--radius); max-width:380px; width:100%;
+  padding:34px 30px; box-shadow:0 30px 70px rgba(46,35,80,0.35); position:relative;
+}
+.auth-karte h3 { font-size:1.3rem; margin-bottom:6px; }
+.auth-karte p.auth-sub { color:var(--tinte-soft); font-size:0.9rem; margin-bottom:22px; }
+.auth-schliessen {
+  position:absolute; top:16px; right:16px; border:none; background:none; font-size:1.1rem;
+  color:var(--tinte-soft); padding:4px 8px; border-radius:8px;
+}
+.auth-feld { margin-bottom:14px; }
+.auth-feld label { display:block; font-size:0.82rem; font-weight:700; color:var(--tinte-soft); margin-bottom:6px; }
+.auth-feld input {
+  width:100%; padding:12px 14px; border-radius:12px; border:1.5px solid rgba(139,124,246,0.25);
+  font-size:0.95rem; font-family:inherit; color:var(--tinte); outline:none;
+}
+.auth-feld input:focus { border-color:var(--lavendel-tief); }
+.auth-submit { width:100%; justify-content:center; margin-top:6px; }
+.auth-fehler { color:var(--koralle); font-size:0.85rem; margin-top:10px; display:none; }
+.auth-fehler.zeigen { display:block; }
+.auth-wechsel { text-align:center; font-size:0.87rem; color:var(--tinte-soft); margin-top:18px; }
+.auth-wechsel button { border:none; background:none; color:var(--lavendel-tief); font-weight:700; padding:0 4px; }
 </style>
 </head>
 <body>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <!-- ================= NAVIGATION ================= -->
 <nav class="nav">
@@ -470,9 +511,36 @@ footer { border-top:1px solid rgba(139,124,246,0.16); padding:36px 0 44px; margi
       <button class="nav-link" data-nav="preise" onclick="zeigeView('preise')">Campus-Pass</button>
       <button class="nav-link" data-nav="lernbereich" onclick="zeigeView('lernbereich')">Mein Lernbereich</button>
       <button class="nav-cta" onclick="zeigeView('kurse')">Jetzt kostenlos starten</button>
+      <div class="nav-auth" id="navAuth">
+        <button class="nav-link" onclick="authOeffnen('login')">Anmelden</button>
+      </div>
     </div>
   </div>
 </nav>
+
+<!-- ================= AUTH MODAL ================= -->
+<div class="auth-overlay" id="authOverlay" onclick="if(event.target===this)authSchliessen()">
+  <div class="auth-karte">
+    <button class="auth-schliessen" aria-label="Schließen" onclick="authSchliessen()">✕</button>
+    <h3 id="authTitel">Willkommen zurück</h3>
+    <p class="auth-sub" id="authUntertitel">Melde dich an, um deinen Lernfortschritt zu speichern.</p>
+    <form id="authForm" onsubmit="authAbsenden(event)">
+      <div class="auth-feld">
+        <label for="authEmail">E-Mail-Adresse</label>
+        <input type="email" id="authEmail" required autocomplete="email" placeholder="du@beispiel.de">
+      </div>
+      <div class="auth-feld">
+        <label for="authPasswort">Passwort</label>
+        <input type="password" id="authPasswort" required autocomplete="current-password" minlength="6" placeholder="Mind. 6 Zeichen">
+      </div>
+      <button type="submit" class="btn btn-primary auth-submit" id="authSubmitBtn">Anmelden</button>
+      <p class="auth-fehler" id="authFehler"></p>
+    </form>
+    <p class="auth-wechsel" id="authWechsel">
+      Noch kein Konto? <button onclick="authModusWechseln()">Jetzt registrieren</button>
+    </p>
+  </div>
+</div>
 
 <!-- ================= VIEW: START ================= -->
 <section class="view aktiv" id="view-start">
@@ -3042,9 +3110,115 @@ function toast(msg) {
   toastTimer = setTimeout(() => t.classList.remove('zeigen'), 3200);
 }
 
+/* ================================================================
+   AUTH – Supabase Login & Registrierung
+   ================================================================ */
+const SUPABASE_URL = 'https://rmnnmeywposbtzkghupv.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_fwvuUjKoaaxGCTD50JUlkg_pFUlS7QN';
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let aktuellerUser = null;
+let authModus = 'login'; // 'login' oder 'register'
+
+function authOeffnen(modus) {
+  authModus = modus;
+  authTexteAktualisieren();
+  document.getElementById('authFehler').classList.remove('zeigen');
+  document.getElementById('authForm').reset();
+  document.getElementById('authOverlay').classList.add('offen');
+  setTimeout(() => document.getElementById('authEmail').focus(), 50);
+}
+function authSchliessen() {
+  document.getElementById('authOverlay').classList.remove('offen');
+}
+function authModusWechseln() {
+  authModus = authModus === 'login' ? 'register' : 'login';
+  authTexteAktualisieren();
+  document.getElementById('authFehler').classList.remove('zeigen');
+}
+function authTexteAktualisieren() {
+  const istLogin = authModus === 'login';
+  document.getElementById('authTitel').textContent = istLogin ? 'Willkommen zurück' : 'Konto erstellen';
+  document.getElementById('authUntertitel').textContent = istLogin
+    ? 'Melde dich an, um deinen Lernfortschritt zu speichern.'
+    : 'Registriere dich kostenlos – für Fortschritt, Zertifikate und den Campus-Pass.';
+  document.getElementById('authSubmitBtn').textContent = istLogin ? 'Anmelden' : 'Registrieren';
+  document.getElementById('authWechsel').innerHTML = istLogin
+    ? 'Noch kein Konto? <button onclick="authModusWechseln()">Jetzt registrieren</button>'
+    : 'Schon ein Konto? <button onclick="authModusWechseln()">Jetzt anmelden</button>';
+}
+function authFehlerText(err) {
+  const m = (err && err.message) || '';
+  if (m.includes('Invalid login credentials')) return 'E-Mail oder Passwort ist falsch.';
+  if (m.includes('already registered') || m.includes('already exists')) return 'Für diese E-Mail existiert bereits ein Konto – einfach anmelden.';
+  if (m.includes('Password should be')) return 'Das Passwort muss mindestens 6 Zeichen haben.';
+  if (m.includes('Unable to validate email')) return 'Bitte gib eine gültige E-Mail-Adresse ein.';
+  return m || 'Etwas ist schiefgelaufen. Bitte versuch es erneut.';
+}
+async function authAbsenden(event) {
+  event.preventDefault();
+  const email = document.getElementById('authEmail').value.trim();
+  const passwort = document.getElementById('authPasswort').value;
+  const fehlerEl = document.getElementById('authFehler');
+  const btn = document.getElementById('authSubmitBtn');
+  fehlerEl.classList.remove('zeigen');
+  btn.disabled = true;
+  try {
+    if (authModus === 'login') {
+      const { error } = await supabaseClient.auth.signInWithPassword({ email, password: passwort });
+      if (error) throw error;
+      authSchliessen();
+      toast('✦ Willkommen zurück!');
+    } else {
+      const { data, error } = await supabaseClient.auth.signUp({ email, password: passwort });
+      if (error) throw error;
+      if (data.session) {
+        authSchliessen();
+        toast('✦ Konto erstellt – willkommen im Campus!');
+      } else {
+        fehlerEl.style.color = 'var(--mint)';
+        fehlerEl.textContent = 'Fast geschafft: Bitte bestätige deine E-Mail-Adresse über den Link, den wir dir geschickt haben.';
+        fehlerEl.classList.add('zeigen');
+      }
+    }
+  } catch (err) {
+    fehlerEl.style.color = 'var(--koralle)';
+    fehlerEl.textContent = authFehlerText(err);
+    fehlerEl.classList.add('zeigen');
+  } finally {
+    btn.disabled = false;
+  }
+}
+async function meldeAb() {
+  await supabaseClient.auth.signOut();
+  toast('Bis bald! Du bist jetzt abgemeldet.');
+}
+function renderAuthUI() {
+  const ziel = document.getElementById('navAuth');
+  if (aktuellerUser) {
+    ziel.innerHTML = `
+      <div class="nav-auth-pill">
+        <span class="aa-email">${aktuellerUser.email}</span>
+        <button onclick="meldeAb()">Abmelden</button>
+      </div>`;
+  } else {
+    ziel.innerHTML = `<button class="nav-link" onclick="authOeffnen('login')">Anmelden</button>`;
+  }
+}
+async function authInit() {
+  const { data } = await supabaseClient.auth.getSession();
+  aktuellerUser = data.session ? data.session.user : null;
+  renderAuthUI();
+  supabaseClient.auth.onAuthStateChange((_event, session) => {
+    aktuellerUser = session ? session.user : null;
+    renderAuthUI();
+  });
+}
+
 ladeFortschritt();
 renderHighlights();
 renderKurse();
+authInit();
 </script>
 </body>
 </html>
