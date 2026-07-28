@@ -2,5 +2,9 @@
   "name": "pixel-chat-backend",
   "version": "1.0.0",
   "private": true,
-  "description": "Backend-Funktion für den Pixel-Chatbot des Zukunftszauber AI Campus"
+  "description": "Backend-Funktionen für den Zukunftszauber AI Campus",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.57.4",
+    "stripe": "^18.5.0"
+  }
 }
