@@ -658,7 +658,7 @@ footer { border-top:1px solid rgba(139,124,246,0.16); padding:36px 0 44px; margi
           <li>Premium-Zertifikate mit Verifizierungslink</li>
           <li>Jederzeit kündbar</li>
         </ul>
-        <button class="btn btn-primary" onclick="startCheckout('monthly', this)">Campus-Pass holen</button>
+        <button class="btn btn-primary" onclick="starteCheckout('monthly')">Campus-Pass holen</button>
       </div>
       <div class="preis-karte">
         <h3>Campus-Pass Lifetime</h3>
@@ -670,7 +670,7 @@ footer { border-top:1px solid rgba(139,124,246,0.16); padding:36px 0 44px; margi
           <li>Premium-Zertifikate mit Verifizierungslink</li>
           <li>Kein Abo, keine wiederkehrende Zahlung</li>
         </ul>
-        <button class="btn btn-ghost" onclick="startCheckout('lifetime', this)">Lifetime-Zugang sichern</button>
+        <button class="btn btn-ghost" onclick="starteCheckout('lifetime')">Lifetime-Zugang sichern</button>
       </div>
     </div>
     <div class="b2b-box">
@@ -2819,13 +2819,14 @@ function zeigeView(name) {
 /* ---------------- Kurskarten ---------------- */
 function kursKarteHTML(kurs) {
   const prog = kursFortschritt(kurs);
+  const zugang = hatZugang(kurs);
   const badge = kurs.frei
     ? '<span class="kurs-badge badge-frei">Kostenlos</span>'
     : '<span class="kurs-badge badge-premium">✦ Campus-Pass</span>';
   const preis = kurs.frei
     ? '<span class="kurs-preis frei">Kostenlos</span>'
     : '<span class="kurs-preis"><s>' + kurs.preis + ' €</s> im Pass inklusive</span>';
-  const cta = kurs.frei || prog > 0 ? (prog > 0 ? 'Weiterlernen' : 'Kurs starten') : 'Mit Campus-Pass freischalten';
+  const cta = zugang ? (prog > 0 ? 'Weiterlernen' : 'Kurs starten') : 'Mit Campus-Pass freischalten';
   return `
   <article class="kurs-karte">
     <div class="kurs-cover" style="background:${kurs.cover}">${badge}<span>${kurs.emoji}</span></div>
@@ -2869,7 +2870,12 @@ let aktKurs = null, aktLektion = 0;
 
 function starteKurs(id) {
   const kurs = KURSE.find(k => k.id === id);
-  if (!kurs.frei && kursFortschritt(kurs) === 0) {
+  if (!hatZugang(kurs)) {
+    if (!aktuellerUser) {
+      toast('Bitte melde dich an, um Premium-Kurse freizuschalten.');
+      authOeffnen('login');
+      return;
+    }
     toast('✦ Dieser Kurs ist Teil des Campus-Pass – schnapp ihn dir dort.');
     zeigeView('preise');
     return;
@@ -3205,60 +3211,89 @@ function renderAuthUI() {
     ziel.innerHTML = `<button class="nav-link" onclick="authOeffnen('login')">Anmelden</button>`;
   }
 }
+/* ---------------- Zugang (Campus-Pass-Status aus Supabase) ---------------- */
+let meinZugang = null; // { access_type, access_status, current_period_end }
+
+function hatZugang(kurs) {
+  if (kurs.frei) return true;
+  return !!(meinZugang && meinZugang.access_status === 'active');
+}
+
+async function ladeZugang() {
+  if (!aktuellerUser) { meinZugang = null; return; }
+  try {
+    const { data, error } = await supabaseClient
+      .from('profiles')
+      .select('access_type, access_status, current_period_end')
+      .eq('user_id', aktuellerUser.id)
+      .single();
+    if (error) { console.error('Zugang konnte nicht geladen werden:', error.message); meinZugang = null; return; }
+    meinZugang = data;
+  } catch (e) {
+    console.error('Zugang konnte nicht geladen werden:', e);
+    meinZugang = null;
+  }
+}
+
+async function aktualisiereNachAuthWechsel() {
+  await ladeZugang();
+  renderAuthUI();
+  renderKurse();
+  renderHighlights();
+  if (document.getElementById('view-lernbereich').classList.contains('aktiv')) renderLernbereich();
+}
+
+async function pruefeCheckoutRueckkehr() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('checkout') === 'success') {
+    toast('✦ Zahlung erfolgreich! Dein Zugang wird gerade freigeschaltet …');
+    // Der Webhook braucht meist nur Sekunden – kurz warten und dann neu laden.
+    setTimeout(async () => {
+      await aktualisiereNachAuthWechsel();
+      toast('✦ Dein Campus-Pass ist aktiv – viel Spaß mit allen Kursen!');
+    }, 2500);
+    window.history.replaceState({}, '', window.location.pathname);
+  } else if (params.get('checkout') === 'cancel') {
+    toast('Checkout abgebrochen – kein Problem, du kannst es jederzeit erneut versuchen.');
+    window.history.replaceState({}, '', window.location.pathname);
+  }
+}
+
 async function authInit() {
   const { data } = await supabaseClient.auth.getSession();
   aktuellerUser = data.session ? data.session.user : null;
   renderAuthUI();
+  await ladeZugang();
+  renderKurse();
+  renderHighlights();
   supabaseClient.auth.onAuthStateChange((_event, session) => {
     aktuellerUser = session ? session.user : null;
-    renderAuthUI();
+    aktualisiereNachAuthWechsel();
   });
+  pruefeCheckoutRueckkehr();
 }
 
-
-async function startCheckout(plan, button) {
-  const originalText = button.textContent;
-
+async function starteCheckout(plan) {
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (!session) {
+    toast('Bitte melde dich zuerst an, dann geht’s direkt zu Stripe.');
+    authOeffnen('login');
+    return;
+  }
   try {
-    button.disabled = true;
-    button.textContent = 'Checkout wird geöffnet …';
-
-    const {
-      data: { session },
-      error: sessionError
-    } = await supabaseClient.auth.getSession();
-
-    if (sessionError || !session?.access_token) {
-      toast('Bitte melde dich zuerst im Campus an.');
-      return;
-    }
-
-    const response = await fetch('/api/create-checkout-session', {
+    const antwort = await fetch('/api/create-checkout-session', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${session.access_token}`
+        'Authorization': 'Bearer ' + session.access_token
       },
       body: JSON.stringify({ plan })
     });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.error || 'Checkout konnte nicht gestartet werden.');
-    }
-
-    if (!data.url) {
-      throw new Error('Stripe hat keine Checkout-Adresse zurückgegeben.');
-    }
-
-    window.location.href = data.url;
-  } catch (error) {
-    console.error('Checkout-Fehler:', error);
-    toast(error.message || 'Checkout konnte nicht gestartet werden.');
-  } finally {
-    button.disabled = false;
-    button.textContent = originalText;
+    const daten = await antwort.json();
+    if (!antwort.ok || !daten.url) throw new Error(daten.error || 'Checkout konnte nicht gestartet werden.');
+    window.location.href = daten.url;
+  } catch (e) {
+    toast('Fehler beim Checkout: ' + e.message);
   }
 }
 
