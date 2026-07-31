@@ -44,9 +44,9 @@ module.exports = async (req, res) => {
       // Zahlung (Abo-Start oder Lifetime-Einmalzahlung) erfolgreich
       case 'checkout.session.completed': {
         const session = event.data.object;
-        const userId = session.client_reference_id || (session.metadata && session.metadata.user_id);
-        const plan = session.metadata && session.metadata.plan;
-
+        const userId = session.client_reference_id || (session.metadata && session.metadata.supabase_user_id);
+        const plan = session.metadata && session.metadata.access_type;
+      
         if (!userId || !plan) {
           console.error('checkout.session.completed ohne user_id oder plan', session.id);
           break;
