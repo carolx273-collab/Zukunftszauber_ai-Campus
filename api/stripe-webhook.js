@@ -1,262 +1,122 @@
+// api/stripe-webhook.js
+// Empfängt Stripe-Events und schaltet den Zugang in Supabase frei.
+// Braucht den ROHEN Request-Body für die Signaturprüfung – deshalb
+// ist der Vercel-Body-Parser hier bewusst deaktiviert (siehe config unten).
+
 const Stripe = require('stripe');
 const { createClient } = require('@supabase/supabase-js');
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 const supabaseAdmin = createClient(
   process.env.SUPABASE_URL,
-  process.env.SUPABASE_SECRET_KEY,
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-      detectSessionInUrl: false
-    }
-  }
+  process.env.SUPABASE_SECRET_KEY
 );
 
-async function getRawBody(req) {
-  const chunks = [];
-
-  for await (const chunk of req) {
-    chunks.push(
-      typeof chunk === 'string' ? Buffer.from(chunk) : chunk
-    );
-  }
-
-  return Buffer.concat(chunks);
-}
-
-function getPeriodEnd(subscription) {
-  const timestamp =
-    subscription?.items?.data?.[0]?.current_period_end ||
-    subscription?.current_period_end;
-
-  return timestamp
-    ? new Date(timestamp * 1000).toISOString()
-    : null;
-}
-
-async function updateProfile(userId, values) {
-  if (!userId) {
-    throw new Error('Keine Supabase-User-ID vorhanden.');
-  }
-
-  const { error } = await supabaseAdmin
-    .from('profiles')
-    .update(values)
-    .eq('user_id', userId);
-
-  if (error) {
-    throw error;
-  }
-}
-
-async function handleCheckoutCompleted(session) {
-  const userId = session.metadata?.supabase_user_id;
-  const accessType = session.metadata?.access_type;
-
-  if (!userId || !accessType) {
-    throw new Error('Checkout-Metadaten fehlen.');
-  }
-
-  if (accessType === 'lifetime') {
-    await updateProfile(userId, {
-      access_type: 'lifetime',
-      access_status: 'active',
-      stripe_customer_id: session.customer || null,
-      stripe_subscription_id: null,
-      current_period_end: null
-    });
-
-    return;
-  }
-
-  if (accessType === 'monthly' && session.subscription) {
-    const subscription = await stripe.subscriptions.retrieve(
-      session.subscription
-    );
-
-    await updateProfile(userId, {
-      access_type: 'monthly',
-      access_status: 'active',
-      stripe_customer_id: session.customer || null,
-      stripe_subscription_id: subscription.id,
-      current_period_end: getPeriodEnd(subscription)
-    });
-  }
-}
-
-async function handleSubscriptionUpdated(subscription) {
-  const userId = subscription.metadata?.supabase_user_id;
-
-  if (!userId) {
-    console.log(
-      'Subscription ohne Supabase-User-ID:',
-      subscription.id
-    );
-    return;
-  }
-
-  const activeStatuses = ['active', 'trialing'];
-
-  await updateProfile(userId, {
-    access_type: 'monthly',
-    access_status: activeStatuses.includes(subscription.status)
-      ? 'active'
-      : subscription.status,
-    stripe_customer_id: subscription.customer || null,
-    stripe_subscription_id: subscription.id,
-    current_period_end: getPeriodEnd(subscription)
+function getRawBody(req) {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    req.on('data', (chunk) => chunks.push(chunk));
+    req.on('end', () => resolve(Buffer.concat(chunks)));
+    req.on('error', reject);
   });
 }
 
-async function handleSubscriptionDeleted(subscription) {
-  const userId = subscription.metadata?.supabase_user_id;
-
-  if (!userId) {
-    console.log(
-      'Gelöschtes Abo ohne Supabase-User-ID:',
-      subscription.id
-    );
-    return;
-  }
-
-  await updateProfile(userId, {
-    access_type: 'free',
-    access_status: 'inactive',
-    stripe_customer_id: subscription.customer || null,
-    stripe_subscription_id: null,
-    current_period_end: null
-  });
-}
-
-async function handlePaymentFailed(invoice) {
-  let subscriptionId =
-    invoice.subscription ||
-    invoice.parent?.subscription_details?.subscription;
-
-  if (
-    subscriptionId &&
-    typeof subscriptionId === 'object'
-  ) {
-    subscriptionId = subscriptionId.id;
-  }
-
-  if (!subscriptionId) {
-    console.log(
-      'Fehlgeschlagene Rechnung ohne Abo:',
-      invoice.id
-    );
-    return;
-  }
-
-  const subscription = await stripe.subscriptions.retrieve(
-    subscriptionId
-  );
-
-  const userId = subscription.metadata?.supabase_user_id;
-
-  if (!userId) {
-    console.log(
-      'Fehlgeschlagene Zahlung ohne Supabase-User-ID:',
-      invoice.id
-    );
-    return;
-  }
-
-  await updateProfile(userId, {
-    access_type: 'monthly',
-    access_status: 'past_due',
-    stripe_customer_id: subscription.customer || null,
-    stripe_subscription_id: subscription.id,
-    current_period_end: getPeriodEnd(subscription)
-  });
-}
-
-module.exports = async function handler(req, res) {
+module.exports = async (req, res) => {
   if (req.method !== 'POST') {
-    return res.status(405).json({
-      error: 'Nur POST-Anfragen sind erlaubt.'
-    });
+    res.status(405).send('Method Not Allowed');
+    return;
   }
 
-  const signature = req.headers['stripe-signature'];
-
-  if (!signature) {
-    return res.status(400).json({
-      error: 'Stripe-Signatur fehlt.'
-    });
-  }
-
-  if (!process.env.STRIPE_WEBHOOK_SECRET) {
-    return res.status(500).json({
-      error: 'STRIPE_WEBHOOK_SECRET fehlt.'
-    });
-  }
-
+  const signatur = req.headers['stripe-signature'];
   let event;
 
   try {
     const rawBody = await getRawBody(req);
-
-    event = stripe.webhooks.constructEvent(
-      rawBody,
-      signature,
-      process.env.STRIPE_WEBHOOK_SECRET
-    );
-  } catch (error) {
-    console.error(
-      'Ungültige Webhook-Signatur:',
-      error.message
-    );
-
-    return res.status(400).json({
-      error: `Webhook-Signatur ungültig: ${error.message}`
-    });
+    event = stripe.webhooks.constructEvent(rawBody, signatur, process.env.STRIPE_WEBHOOK_SECRET);
+  } catch (err) {
+    console.error('Webhook-Signatur ungültig:', err.message);
+    res.status(400).send(`Webhook Error: ${err.message}`);
+    return;
   }
 
   try {
     switch (event.type) {
-      case 'checkout.session.completed':
-        await handleCheckoutCompleted(event.data.object);
-        break;
+      // Zahlung (Abo-Start oder Lifetime-Einmalzahlung) erfolgreich
+      case 'checkout.session.completed': {
+        const session = event.data.object;
+        const userId = session.client_reference_id || (session.metadata && session.metadata.user_id);
+        const plan = session.metadata && session.metadata.plan;
 
-      case 'customer.subscription.updated':
-        await handleSubscriptionUpdated(event.data.object);
-        break;
+        if (!userId || !plan) {
+          console.error('checkout.session.completed ohne user_id oder plan', session.id);
+          break;
+        }
 
-      case 'customer.subscription.deleted':
-        await handleSubscriptionDeleted(event.data.object);
-        break;
+        const update = {
+          access_type: plan,
+          access_status: 'active',
+          stripe_customer_id: session.customer || null,
+        };
 
-      case 'invoice.payment_failed':
-        await handlePaymentFailed(event.data.object);
+        if (plan === 'monthly' && session.subscription) {
+          update.stripe_subscription_id = session.subscription;
+          const sub = await stripe.subscriptions.retrieve(session.subscription);
+          update.current_period_end = new Date(sub.current_period_end * 1000).toISOString();
+        }
+
+        const { error } = await supabaseAdmin
+          .from('profiles')
+          .update(update)
+          .eq('user_id', userId);
+
+        if (error) console.error('Supabase-Update (checkout.session.completed) fehlgeschlagen:', error.message);
         break;
+      }
+
+      // Abo verlängert / Status geändert (z. B. Zahlung fehlgeschlagen)
+      case 'customer.subscription.updated': {
+        const sub = event.data.object;
+        const neuerStatus = sub.status === 'active' ? 'active' : 'inactive';
+
+        const { error } = await supabaseAdmin
+          .from('profiles')
+          .update({
+            access_status: neuerStatus,
+            current_period_end: new Date(sub.current_period_end * 1000).toISOString(),
+          })
+          .eq('stripe_subscription_id', sub.id);
+
+        if (error) console.error('Supabase-Update (subscription.updated) fehlgeschlagen:', error.message);
+        break;
+      }
+
+      // Abo endgültig beendet (nach Kündigung, am Ende der bezahlten Periode)
+      case 'customer.subscription.deleted': {
+        const sub = event.data.object;
+
+        const { error } = await supabaseAdmin
+          .from('profiles')
+          .update({ access_status: 'inactive' })
+          .eq('stripe_subscription_id', sub.id);
+
+        if (error) console.error('Supabase-Update (subscription.deleted) fehlgeschlagen:', error.message);
+        break;
+      }
 
       default:
-        console.log(
-          `Nicht verarbeitetes Stripe-Ereignis: ${event.type}`
-        );
+        // Andere Events ignorieren wir bewusst.
+        break;
     }
 
-    return res.status(200).json({
-      received: true
-    });
-  } catch (error) {
-    console.error(
-      'Fehler bei der Webhook-Verarbeitung:',
-      error
-    );
-
-    return res.status(500).json({
-      error: 'Das Stripe-Ereignis konnte nicht verarbeitet werden.'
-    });
+    res.status(200).json({ received: true });
+  } catch (err) {
+    console.error('Webhook-Verarbeitung fehlgeschlagen:', err);
+    res.status(500).json({ error: 'Interner Fehler' });
   }
 };
 
 module.exports.config = {
   api: {
-    bodyParser: false
-  }
+    bodyParser: false,
+  },
 };
