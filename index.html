@@ -2979,16 +2979,42 @@ const GLOSSAR = [
   { buchstabe: 'Z', begriff: 'Zufallsgewichtung (Random Initialization)', erklaerung: 'Die zufällige Startbelegung der Gewichte eines neuronalen Netzes, bevor das eigentliche Training beginnt.' },
 ];
 
-/* ---------------- Fortschritt (mit Fallback) ---------------- */
+/* ---------------- Fortschritt pro Benutzer ---------------- */
 let fortschritt = { fertig: {}, quiz: {} };
-function ladeFortschritt() {
-  try {
-    const raw = localStorage.getItem('zz_campus_fortschritt');
-    if (raw) fortschritt = JSON.parse(raw);
-  } catch (e) { /* Vorschau ohne localStorage: In-Memory-Fallback */ }
+
+function fortschrittSchluessel() {
+  return aktuellerUser
+    ? `zz_campus_fortschritt_${aktuellerUser.id}`
+    : 'zz_campus_fortschritt_gast';
 }
+
+function ladeFortschritt() {
+  fortschritt = { fertig: {}, quiz: {} };
+
+  try {
+    const raw = localStorage.getItem(fortschrittSchluessel());
+    if (!raw) return;
+
+    const geladen = JSON.parse(raw);
+    fortschritt = {
+      fertig: geladen && typeof geladen.fertig === 'object' ? geladen.fertig : {},
+      quiz: geladen && typeof geladen.quiz === 'object' ? geladen.quiz : {}
+    };
+  } catch (e) {
+    console.error('Lernfortschritt konnte nicht geladen werden:', e);
+    fortschritt = { fertig: {}, quiz: {} };
+  }
+}
+
 function speichereFortschritt() {
-  try { localStorage.setItem('zz_campus_fortschritt', JSON.stringify(fortschritt)); } catch (e) { /* still ok */ }
+  try {
+    localStorage.setItem(
+      fortschrittSchluessel(),
+      JSON.stringify(fortschritt)
+    );
+  } catch (e) {
+    console.error('Lernfortschritt konnte nicht gespeichert werden:', e);
+  }
 }
 function istFertig(kursId, i) { return !!(fortschritt.fertig[kursId] && fortschritt.fertig[kursId][i]); }
 function markiereFertig(kursId, i) {
@@ -3539,12 +3565,21 @@ async function ladeZugang() {
 }
 
 async function aktualisiereNachAuthWechsel() {
+  // Alte Daten des vorherigen Kontos sofort verwerfen.
+  meinZugang = null;
+  fortschritt = { fertig: {}, quiz: {} };
+
+  ladeFortschritt();
   await ladeZugang();
+
   renderAuthUI();
   aktualisiereAdminNavigation();
   renderKurse();
   renderHighlights();
-  if (document.getElementById('view-lernbereich').classList.contains('aktiv')) renderLernbereich();
+
+  if (document.getElementById('view-lernbereich').classList.contains('aktiv')) {
+    renderLernbereich();
+  }
 }
 
 async function pruefeCheckoutRueckkehr() {
@@ -3570,15 +3605,22 @@ async function pruefeCheckoutRueckkehr() {
 async function authInit() {
   const { data } = await supabaseClient.auth.getSession();
   aktuellerUser = data.session ? data.session.user : null;
-  renderAuthUI();
+
+  // Fortschritt und Zugang immer passend zum aktuell angemeldeten Konto laden.
+  meinZugang = null;
+  ladeFortschritt();
   await ladeZugang();
+
+  renderAuthUI();
   aktualisiereAdminNavigation();
   renderKurse();
   renderHighlights();
+
   supabaseClient.auth.onAuthStateChange((_event, session) => {
     aktuellerUser = session ? session.user : null;
     aktualisiereNachAuthWechsel();
   });
+
   pruefeCheckoutRueckkehr();
 }
 
