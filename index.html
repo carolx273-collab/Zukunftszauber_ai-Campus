@@ -418,121 +418,6 @@ button { font-family:inherit; cursor:pointer; }
 .dash-karte b { display:block; font-family:var(--font-display); font-size:2rem; color:var(--lavendel-tief); }
 .dash-karte span { font-size:0.88rem; color:var(--tinte-soft); }
 
-
-/* ---------- Premium Campus-Dashboard ---------- */
-.dashboard-shell { padding:44px 0 72px; }
-.dashboard-welcome {
-  position:relative; overflow:hidden; border-radius:30px; padding:38px;
-  background:linear-gradient(125deg,rgba(108,92,231,.96),rgba(139,124,246,.94) 48%,rgba(255,138,107,.92));
-  color:#fff; box-shadow:0 24px 60px rgba(108,92,231,.25); margin-bottom:26px;
-}
-.dashboard-welcome::after {
-  content:"✦"; position:absolute; right:34px; top:8px; font-size:9rem; line-height:1;
-  color:rgba(255,255,255,.10); transform:rotate(12deg); pointer-events:none;
-}
-.dashboard-kicker { font-size:.78rem; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; opacity:.82; margin-bottom:8px; }
-.dashboard-welcome h1 { font-size:clamp(2rem,4vw,3.25rem); margin-bottom:10px; max-width:720px; }
-.dashboard-welcome p { max-width:650px; opacity:.90; font-size:1.04rem; }
-.dashboard-welcome-actions { display:flex; gap:12px; flex-wrap:wrap; margin-top:24px; }
-.dashboard-welcome .btn-dashboard-main,
-.dashboard-welcome .btn-dashboard-soft {
-  border:none; border-radius:999px; padding:13px 22px; font-weight:800; font-size:.92rem;
-  display:inline-flex; align-items:center; gap:8px; transition:transform .18s,background .18s;
-}
-.dashboard-welcome .btn-dashboard-main { background:#fff; color:var(--lavendel-tief); }
-.dashboard-welcome .btn-dashboard-soft { background:rgba(255,255,255,.16); color:#fff; border:1px solid rgba(255,255,255,.35); }
-.dashboard-welcome .btn-dashboard-main:hover,.dashboard-welcome .btn-dashboard-soft:hover { transform:translateY(-2px); }
-.dashboard-layout { display:grid; grid-template-columns:minmax(0,1.65fr) minmax(280px,.85fr); gap:24px; align-items:start; }
-.dashboard-main,.dashboard-side { display:grid; gap:24px; }
-.dashboard-panel {
-  background:rgba(255,255,255,.72); border:1.5px solid rgba(255,255,255,.9); border-radius:24px;
-  padding:26px; box-shadow:var(--schatten); backdrop-filter:blur(14px);
-}
-.dashboard-panel-head { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:20px; }
-.dashboard-panel-head h2 { font-size:1.25rem; margin-bottom:4px; }
-.dashboard-panel-head p { color:var(--tinte-soft); font-size:.88rem; }
-.dashboard-link { border:none; background:none; color:var(--lavendel-tief); font-weight:800; font-size:.86rem; white-space:nowrap; }
-.dashboard-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
-.dashboard-stat {
-  border-radius:18px; padding:18px; background:linear-gradient(145deg,#fff,rgba(245,242,255,.78));
-  border:1px solid rgba(139,124,246,.13); min-height:112px;
-}
-.dashboard-stat-icon { font-size:1.35rem; display:block; margin-bottom:9px; }
-.dashboard-stat b { display:block; font-family:var(--font-display); font-size:1.75rem; color:var(--lavendel-tief); line-height:1; }
-.dashboard-stat span { display:block; color:var(--tinte-soft); font-size:.78rem; margin-top:7px; }
-.continue-card { display:grid; grid-template-columns:112px 1fr; gap:20px; align-items:center; }
-.continue-cover { min-height:126px; border-radius:20px; display:flex; align-items:center; justify-content:center; font-size:3rem; box-shadow:inset 0 0 0 1px rgba(255,255,255,.35); }
-.continue-copy h3 { font-size:1.22rem; margin:4px 0 8px; }
-.continue-copy p { color:var(--tinte-soft); font-size:.88rem; margin-bottom:13px; }
-.progress-track { height:9px; border-radius:999px; background:rgba(139,124,246,.13); overflow:hidden; }
-.progress-fill { height:100%; border-radius:inherit; background:linear-gradient(90deg,var(--lavendel-tief),var(--koralle)); transition:width .45s ease; }
-.progress-row { display:flex; justify-content:space-between; gap:12px; margin-top:7px; color:var(--tinte-soft); font-size:.76rem; }
-.continue-actions { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:15px; }
-.btn-dashboard-small { border:none; padding:10px 17px; border-radius:999px; color:#fff; font-weight:800; background:linear-gradient(95deg,var(--lavendel-tief),var(--koralle)); }
-.course-progress-list { display:grid; gap:12px; }
-.course-progress-item { display:grid; grid-template-columns:46px 1fr auto; gap:13px; align-items:center; padding:13px; border-radius:16px; background:rgba(245,242,255,.62); }
-.course-progress-emoji { width:46px; height:46px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:1.35rem; }
-.course-progress-copy b { display:block; font-size:.9rem; margin-bottom:4px; }
-.course-progress-copy .progress-track { height:6px; }
-.course-progress-value { font-weight:800; font-size:.8rem; color:var(--lavendel-tief); }
-.pass-card { background:linear-gradient(145deg,#2E2350,#49377c); color:#fff; }
-.pass-card .dashboard-panel-head p { color:rgba(255,255,255,.68); }
-.pass-badge { display:inline-flex; align-items:center; gap:7px; border-radius:999px; padding:7px 12px; background:rgba(255,255,255,.12); font-size:.76rem; font-weight:800; margin-bottom:18px; }
-.pass-status { display:flex; align-items:center; gap:10px; font-size:1.2rem; font-family:var(--font-display); font-weight:800; margin-bottom:8px; }
-.pass-status-dot { width:10px; height:10px; border-radius:50%; background:var(--mint); box-shadow:0 0 0 5px rgba(78,201,164,.15); }
-.pass-meta { display:grid; gap:8px; margin:18px 0 0; }
-.pass-meta-row { display:flex; justify-content:space-between; gap:16px; font-size:.82rem; padding-top:9px; border-top:1px solid rgba(255,255,255,.10); }
-.pass-meta-row span:first-child { color:rgba(255,255,255,.62); }
-.pass-manage-btn { width:100%; margin-top:16px; border:1px solid rgba(255,255,255,.32); background:rgba(255,255,255,.12); color:#fff; padding:11px 15px; border-radius:999px; font-weight:800; transition:all .18s; }
-.pass-manage-btn:hover { background:rgba(255,255,255,.22); transform:translateY(-1px); }
-.pass-manage-btn:disabled { opacity:.55; cursor:wait; transform:none; }
-.quick-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:11px; }
-.quick-action { border:none; text-align:left; padding:15px; border-radius:16px; background:rgba(245,242,255,.72); color:var(--tinte); transition:transform .17s,background .17s; }
-.quick-action:hover { transform:translateY(-2px); background:#fff; }
-.quick-action span { display:block; font-size:1.3rem; margin-bottom:7px; }
-.quick-action b { font-size:.83rem; }
-.pixel-dashboard { background:linear-gradient(135deg,rgba(255,176,138,.22),rgba(139,124,246,.18)); }
-.pixel-dashboard-inner { display:flex; align-items:center; gap:15px; }
-.pixel-dashboard-avatar { width:58px; height:58px; flex:0 0 58px; border-radius:20px; background:linear-gradient(135deg,var(--lavendel-tief),var(--peach)); display:flex; align-items:center; justify-content:center; font-size:1.8rem; box-shadow:0 10px 24px rgba(108,92,231,.22); }
-.pixel-dashboard p { color:var(--tinte-soft); font-size:.84rem; margin:5px 0 12px; }
-.dashboard-empty { text-align:center; padding:30px 10px; color:var(--tinte-soft); }
-.dashboard-empty .empty-icon { font-size:2.4rem; margin-bottom:8px; }
-.dashboard-certificates { margin-top:24px; }
-@media(max-width:900px){
-  .dashboard-layout{grid-template-columns:1fr}.dashboard-stats{grid-template-columns:1fr 1fr 1fr}.dashboard-welcome{padding:30px 24px}
-}
-@media(max-width:620px){
-  .dashboard-shell{padding-top:24px}.dashboard-stats{grid-template-columns:1fr}.continue-card{grid-template-columns:1fr}.continue-cover{min-height:105px}
-  .dashboard-panel{padding:20px}.dashboard-panel-head{align-items:center}.quick-grid{grid-template-columns:1fr 1fr}.dashboard-welcome-actions>*{width:100%;justify-content:center}
-}
-
-
-/* ---------- Adminbereich ---------- */
-.admin-shell { padding:44px 0 72px; }
-.admin-hero { border-radius:28px; padding:32px; color:#fff; background:linear-gradient(125deg,#2E2350,#6C5CE7 58%,#FF8A6B); box-shadow:0 22px 55px rgba(46,35,80,.22); margin-bottom:24px; }
-.admin-hero h1 { font-size:clamp(1.8rem,4vw,2.8rem); margin-bottom:8px; }
-.admin-hero p { opacity:.86; max-width:700px; }
-.admin-toolbar { display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap; margin-bottom:18px; }
-.admin-search { flex:1; min-width:240px; padding:12px 16px; border-radius:999px; border:1.5px solid rgba(139,124,246,.28); background:rgba(255,255,255,.78); font:inherit; color:var(--tinte); }
-.admin-refresh { border:none; border-radius:999px; padding:12px 18px; color:#fff; font-weight:800; background:linear-gradient(95deg,var(--lavendel-tief),var(--koralle)); }
-.admin-summary { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:22px; }
-.admin-summary-card { background:rgba(255,255,255,.76); border:1.5px solid rgba(255,255,255,.9); border-radius:18px; padding:18px; box-shadow:var(--schatten); }
-.admin-summary-card b { display:block; font:800 1.65rem/1 var(--font-display); color:var(--lavendel-tief); }
-.admin-summary-card span { color:var(--tinte-soft); font-size:.8rem; }
-.admin-table-wrap { overflow-x:auto; background:rgba(255,255,255,.78); border:1.5px solid rgba(255,255,255,.92); border-radius:22px; box-shadow:var(--schatten); }
-.admin-table { width:100%; border-collapse:collapse; min-width:900px; }
-.admin-table th,.admin-table td { text-align:left; padding:14px 16px; border-bottom:1px solid rgba(139,124,246,.12); vertical-align:middle; }
-.admin-table th { color:var(--tinte-soft); font-size:.76rem; letter-spacing:.04em; text-transform:uppercase; background:rgba(245,242,255,.72); }
-.admin-table td { font-size:.88rem; }
-.admin-role,.admin-status { padding:8px 10px; border-radius:10px; border:1px solid rgba(139,124,246,.24); background:#fff; font:inherit; color:var(--tinte); }
-.admin-save { border:none; border-radius:999px; padding:9px 14px; background:var(--lavendel-tief); color:#fff; font-weight:800; }
-.admin-save:disabled { opacity:.55; cursor:wait; }
-.admin-badge { display:inline-flex; border-radius:999px; padding:5px 10px; font-weight:800; font-size:.74rem; }
-.admin-badge.active { background:rgba(78,201,164,.14); color:#21866b; }
-.admin-badge.inactive { background:rgba(255,138,107,.15); color:#c34f34; }
-.admin-empty { text-align:center; padding:34px; color:var(--tinte-soft); }
-@media(max-width:760px){.admin-summary{grid-template-columns:1fr 1fr}.admin-hero{padding:25px 22px}}
-
 /* ---------- Footer ---------- */
 footer { border-top:1px solid rgba(139,124,246,0.16); padding:36px 0 44px; margin-top:30px; }
 .footer-inner { max-width:var(--maxw); margin:0 auto; padding:0 24px; display:flex; justify-content:space-between; gap:24px; flex-wrap:wrap; align-items:center; }
@@ -625,7 +510,6 @@ footer { border-top:1px solid rgba(139,124,246,0.16); padding:36px 0 44px; margi
       <button class="nav-link" data-nav="glossar" onclick="zeigeView('glossar')">Glossar</button>
       <button class="nav-link" data-nav="preise" onclick="zeigeView('preise')">Campus-Pass</button>
       <button class="nav-link" data-nav="lernbereich" onclick="zeigeView('lernbereich')">Mein Lernbereich</button>
-      <button class="nav-link" id="adminNavBtn" data-nav="admin" onclick="zeigeView('admin')" style="display:none;">👑 Admin</button>
       <button class="nav-cta" onclick="zeigeView('kurse')">Jetzt kostenlos starten</button>
       <div class="nav-auth" id="navAuth">
         <button class="nav-link" onclick="authOeffnen('login')">Anmelden</button>
@@ -699,7 +583,7 @@ footer { border-top:1px solid rgba(139,124,246,0.16); padding:36px 0 44px; margi
     </div>
     <div class="kurs-grid" id="highlightKurse"></div>
     <div style="text-align:center;margin-top:34px;">
-      <button class="btn btn-ghost" onclick="zeigeView('kurse')">Alle 9 Kurse entdecken →</button>
+      <button class="btn btn-ghost" onclick="zeigeView('kurse')">Alle 6 Kurse entdecken →</button>
     </div>
   </div>
 </section>
@@ -768,25 +652,25 @@ footer { border-top:1px solid rgba(139,124,246,0.16); padding:36px 0 44px; margi
         <h3>Campus-Pass</h3>
         <div class="preis-wert" id="passPreisWert">7,99 €<small>/Monat</small></div>
         <ul class="preis-liste">
-          <li>Zugriff auf alle 9 Kurse &amp; alle neuen Kurse</li>
+          <li>Zugriff auf alle 6 Kurse &amp; alle neuen Kurse</li>
           <li>Monatliche Live-Q&amp;A-Session mit Caro</li>
           <li>Prompt-Bibliothek zum Download</li>
           <li>Premium-Zertifikate mit Verifizierungslink</li>
           <li>Jederzeit kündbar</li>
         </ul>
-        <button class="btn btn-primary" onclick="starteCheckout('monthly')">Campus-Pass holen</button>
+        <button class="btn btn-primary" onclick="startCheckout('monthly', this)">Campus-Pass holen</button>
       </div>
       <div class="preis-karte">
         <h3>Campus-Pass Lifetime</h3>
         <div class="preis-wert">249 €<small>einmalig</small></div>
         <ul class="preis-liste">
           <li>Einmal zahlen, dauerhaft Zugriff</li>
-          <li>Alle 9 Kurse &amp; alle künftigen Kurse</li>
+          <li>Alle 6 Kurse &amp; alle künftigen Kurse</li>
           <li>Prompt-Bibliothek zum Download</li>
           <li>Premium-Zertifikate mit Verifizierungslink</li>
           <li>Kein Abo, keine wiederkehrende Zahlung</li>
         </ul>
-        <button class="btn btn-ghost" onclick="starteCheckout('lifetime')">Lifetime-Zugang sichern</button>
+        <button class="btn btn-ghost" onclick="startCheckout('lifetime', this)">Lifetime-Zugang sichern</button>
       </div>
     </div>
     <div class="b2b-box">
@@ -815,101 +699,20 @@ footer { border-top:1px solid rgba(139,124,246,0.16); padding:36px 0 44px; margi
   </div>
 </section>
 
-<!-- ================= VIEW: ADMIN ================= -->
-<section class="view" id="view-admin">
-  <div class="container admin-shell">
-    <header class="admin-hero">
-      <div class="dashboard-kicker">Nur für Administrator:innen</div>
-      <h1>👑 Mitglieder verwalten</h1>
-      <p>Hier vergibst du Teamzugänge, prüfst Mitgliedschaften und kannst den Zugang normaler Mitglieder freigeben oder sperren.</p>
-    </header>
-    <div class="admin-summary">
-      <div class="admin-summary-card"><b id="adminCountAll">0</b><span>Registrierte Nutzer</span></div>
-      <div class="admin-summary-card"><b id="adminCountTeam">0</b><span>Admin &amp; Team</span></div>
-      <div class="admin-summary-card"><b id="adminCountActive">0</b><span>Aktiver Zugang</span></div>
-      <div class="admin-summary-card"><b id="adminCountMonthly">0</b><span>Monatsabos</span></div>
-    </div>
-    <div class="admin-toolbar">
-      <input class="admin-search" id="adminSuche" type="search" placeholder="Nach E-Mail suchen …" oninput="filterAdminMitglieder()">
-      <button class="admin-refresh" onclick="ladeAdminMitglieder()">↻ Aktualisieren</button>
-    </div>
-    <div class="admin-table-wrap">
-      <table class="admin-table">
-        <thead><tr><th>E-Mail</th><th>Rolle</th><th>Zugang</th><th>Tarif</th><th>Registriert</th><th>Aktion</th></tr></thead>
-        <tbody id="adminMitgliederBody"><tr><td colspan="6" class="admin-empty">Mitglieder werden geladen …</td></tr></tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
 <!-- ================= VIEW: LERNBEREICH ================= -->
 <section class="view" id="view-lernbereich">
-  <div class="container dashboard-shell">
-    <header class="dashboard-welcome">
-      <div class="dashboard-kicker">Dein persönlicher Lerncampus</div>
-      <h1 id="dashboardBegruessung">Willkommen zurück!</h1>
-      <p id="dashboardWillkommenText">Schön, dass du da bist. Setze deinen Lernweg genau dort fort, wo du aufgehört hast.</p>
-      <div class="dashboard-welcome-actions">
-        <button class="btn-dashboard-main" id="dashboardWeiterBtn" onclick="dashboardWeiterlernen()">▶ Weiterlernen</button>
-        <button class="btn-dashboard-soft" onclick="zeigeView('kurse')">Alle Kurse ansehen</button>
-      </div>
-    </header>
-
-    <div class="dashboard-layout">
-      <main class="dashboard-main">
-        <section class="dashboard-panel">
-          <div class="dashboard-panel-head">
-            <div><h2>Dein Fortschritt</h2><p>Jede abgeschlossene Lektion bringt dich weiter.</p></div>
-          </div>
-          <div class="dashboard-stats">
-            <div class="dashboard-stat"><span class="dashboard-stat-icon">✅</span><b id="statLektionen">0</b><span>Lektionen abgeschlossen</span></div>
-            <div class="dashboard-stat"><span class="dashboard-stat-icon">📚</span><b id="statKurse">0</b><span>Kurse abgeschlossen</span></div>
-            <div class="dashboard-stat"><span class="dashboard-stat-icon">🏆</span><b id="statZertifikate">0</b><span>Zertifikate erhalten</span></div>
-          </div>
-        </section>
-
-        <section class="dashboard-panel" id="weiterlernenPanel">
-          <div class="dashboard-panel-head">
-            <div><h2>Weiterlernen</h2><p>Dein nächster sinnvoller Schritt im Campus.</p></div>
-          </div>
-          <div id="dashboardWeiterlernenInhalt"></div>
-        </section>
-
-        <section class="dashboard-panel">
-          <div class="dashboard-panel-head">
-            <div><h2>Meine Kurse</h2><p>Deine begonnenen und abgeschlossenen Lernwelten.</p></div>
-            <button class="dashboard-link" onclick="zeigeView('kurse')">Alle anzeigen →</button>
-          </div>
-          <div class="course-progress-list" id="meineKurse"></div>
-        </section>
-      </main>
-
-      <aside class="dashboard-side">
-        <section class="dashboard-panel pass-card">
-          <div class="dashboard-panel-head"><div><h2>Dein Campus Pass</h2><p>Dein aktueller Mitgliederstatus</p></div></div>
-          <div id="dashboardPassInhalt"></div>
-        </section>
-
-        <section class="dashboard-panel">
-          <div class="dashboard-panel-head"><div><h2>Schnellzugriff</h2><p>Direkt zu deinen wichtigsten Bereichen.</p></div></div>
-          <div class="quick-grid">
-            <button class="quick-action" onclick="zeigeView('kurse')"><span>📚</span><b>Alle Kurse</b></button>
-            <button class="quick-action" onclick="zeigeView('glossar')"><span>🔎</span><b>KI-Glossar</b></button>
-            <button class="quick-action" onclick="togglePixelChat(true)"><span>🤖</span><b>Pixel fragen</b></button>
-            <button class="quick-action" onclick="zeigeView('preise')"><span>✨</span><b>Campus Pass</b></button>
-          </div>
-        </section>
-
-        <section class="dashboard-panel pixel-dashboard">
-          <div class="pixel-dashboard-inner">
-            <div class="pixel-dashboard-avatar">🤖</div>
-            <div><h3>Pixel hilft dir</h3><p>Stelle Fragen zu KI, Tools oder deinen Kursinhalten.</p><button class="dashboard-link" onclick="togglePixelChat(true)">Chat öffnen →</button></div>
-          </div>
-        </section>
-      </aside>
+  <div class="container sektion">
+    <div class="sektion-kopf">
+      <h2>Mein Lernbereich</h2>
+      <p>Dein Fortschritt, deine Kurse, deine Zertifikate – alles an einem Ort.</p>
     </div>
-
-    <div class="dashboard-certificates" id="zertifikatBereich"></div>
+    <div class="dash-grid">
+      <div class="dash-karte"><b id="statLektionen">0</b><span>Lektionen abgeschlossen</span></div>
+      <div class="dash-karte"><b id="statKurse">0</b><span>Kurse abgeschlossen</span></div>
+      <div class="dash-karte"><b id="statZertifikate">0</b><span>Zertifikate erhalten</span></div>
+    </div>
+    <div class="kurs-grid" id="meineKurse"></div>
+    <div id="zertifikatBereich"></div>
   </div>
 </section>
 
@@ -2979,42 +2782,16 @@ const GLOSSAR = [
   { buchstabe: 'Z', begriff: 'Zufallsgewichtung (Random Initialization)', erklaerung: 'Die zufällige Startbelegung der Gewichte eines neuronalen Netzes, bevor das eigentliche Training beginnt.' },
 ];
 
-/* ---------------- Fortschritt pro Benutzer ---------------- */
+/* ---------------- Fortschritt (mit Fallback) ---------------- */
 let fortschritt = { fertig: {}, quiz: {} };
-
-function fortschrittSchluessel() {
-  return aktuellerUser
-    ? `zz_campus_fortschritt_${aktuellerUser.id}`
-    : 'zz_campus_fortschritt_gast';
-}
-
 function ladeFortschritt() {
-  fortschritt = { fertig: {}, quiz: {} };
-
   try {
-    const raw = localStorage.getItem(fortschrittSchluessel());
-    if (!raw) return;
-
-    const geladen = JSON.parse(raw);
-    fortschritt = {
-      fertig: geladen && typeof geladen.fertig === 'object' ? geladen.fertig : {},
-      quiz: geladen && typeof geladen.quiz === 'object' ? geladen.quiz : {}
-    };
-  } catch (e) {
-    console.error('Lernfortschritt konnte nicht geladen werden:', e);
-    fortschritt = { fertig: {}, quiz: {} };
-  }
+    const raw = localStorage.getItem('zz_campus_fortschritt');
+    if (raw) fortschritt = JSON.parse(raw);
+  } catch (e) { /* Vorschau ohne localStorage: In-Memory-Fallback */ }
 }
-
 function speichereFortschritt() {
-  try {
-    localStorage.setItem(
-      fortschrittSchluessel(),
-      JSON.stringify(fortschritt)
-    );
-  } catch (e) {
-    console.error('Lernfortschritt konnte nicht gespeichert werden:', e);
-  }
+  try { localStorage.setItem('zz_campus_fortschritt', JSON.stringify(fortschritt)); } catch (e) { /* still ok */ }
 }
 function istFertig(kursId, i) { return !!(fortschritt.fertig[kursId] && fortschritt.fertig[kursId][i]); }
 function markiereFertig(kursId, i) {
@@ -3034,7 +2811,6 @@ function zeigeView(name) {
   document.querySelectorAll('.nav-link').forEach(b => b.classList.toggle('aktiv', b.dataset.nav === name));
   document.getElementById('navLinks').classList.remove('offen');
   if (name === 'lernbereich') renderLernbereich();
-  if (name === 'admin') ladeAdminMitglieder();
   if (name === 'kurse') renderKurse();
   if (name === 'glossar') renderGlossar();
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -3043,14 +2819,13 @@ function zeigeView(name) {
 /* ---------------- Kurskarten ---------------- */
 function kursKarteHTML(kurs) {
   const prog = kursFortschritt(kurs);
-  const zugang = hatZugang(kurs);
   const badge = kurs.frei
     ? '<span class="kurs-badge badge-frei">Kostenlos</span>'
     : '<span class="kurs-badge badge-premium">✦ Campus-Pass</span>';
   const preis = kurs.frei
     ? '<span class="kurs-preis frei">Kostenlos</span>'
-    : '<span class="kurs-preis"><s>' + kurs.preis + ' €</s> im Pass inklusive</span>';
-  const cta = zugang ? (prog > 0 ? 'Weiterlernen' : 'Kurs starten') : 'Mit Campus-Pass freischalten';
+    : '<span class="kurs-preis">Im Pass inklusive</span>';
+  const cta = kurs.frei || prog > 0 ? (prog > 0 ? 'Weiterlernen' : 'Kurs starten') : 'Mit Campus-Pass freischalten';
   return `
   <article class="kurs-karte">
     <div class="kurs-cover" style="background:${kurs.cover}">${badge}<span>${kurs.emoji}</span></div>
@@ -3094,12 +2869,7 @@ let aktKurs = null, aktLektion = 0;
 
 function starteKurs(id) {
   const kurs = KURSE.find(k => k.id === id);
-  if (!hatZugang(kurs)) {
-    if (!aktuellerUser) {
-      toast('Bitte melde dich an, um Premium-Kurse freizuschalten.');
-      authOeffnen('login');
-      return;
-    }
+  if (!kurs.frei && kursFortschritt(kurs) === 0) {
     toast('✦ Dieser Kurs ist Teil des Campus-Pass – schnapp ihn dir dort.');
     zeigeView('preise');
     return;
@@ -3266,35 +3036,6 @@ function springeZuBuchstabe(b) {
 }
 
 /* ---------------- Lernbereich ---------------- */
-function dashboardAnzeigename() {
-  if (!aktuellerUser) return 'im Campus';
-  const meta = aktuellerUser.user_metadata || {};
-  const voll = meta.full_name || meta.name || meta.display_name;
-  if (voll) return String(voll).split(' ')[0];
-  const lokal = (aktuellerUser.email || '').split('@')[0].replace(/[._-]+/g, ' ').trim();
-  if (!lokal) return 'im Campus';
-  return lokal.charAt(0).toUpperCase() + lokal.slice(1);
-}
-
-function dashboardNaechsterKurs() {
-  const begonnen = KURSE.filter(k => kursFortschritt(k) > 0 && kursFortschritt(k) < 100 && hatZugang(k));
-  if (begonnen.length) return begonnen.sort((a,b) => kursFortschritt(b) - kursFortschritt(a))[0];
-  return KURSE.find(k => hatZugang(k) && kursFortschritt(k) < 100) || KURSE.find(k => hatZugang(k)) || null;
-}
-
-function dashboardWeiterlernen() {
-  const kurs = dashboardNaechsterKurs();
-  if (kurs) starteKurs(kurs.id);
-  else zeigeView('kurse');
-}
-
-function formatiereCampusDatum(wert) {
-  if (!wert) return 'Nicht angegeben';
-  const datum = new Date(wert);
-  if (Number.isNaN(datum.getTime())) return 'Nicht angegeben';
-  return datum.toLocaleDateString('de-DE');
-}
-
 function renderLernbereich() {
   let lekt = 0, kurseFertig = 0;
   KURSE.forEach(k => {
@@ -3302,84 +3043,25 @@ function renderLernbereich() {
     lekt += done;
     if (done === k.lektionen.length) kurseFertig++;
   });
-
   document.getElementById('statLektionen').textContent = lekt;
   document.getElementById('statKurse').textContent = kurseFertig;
   document.getElementById('statZertifikate').textContent = kurseFertig;
 
-  const name = dashboardAnzeigename();
-  document.getElementById('dashboardBegruessung').textContent = aktuellerUser
-    ? `Willkommen zurück, ${name}! 👋`
-    : 'Willkommen in deinem Lerncampus! ✨';
-  document.getElementById('dashboardWillkommenText').textContent = aktuellerUser
-    ? 'Schön, dass du wieder da bist. Setze deinen Lernweg genau dort fort, wo du aufgehört hast.'
-    : 'Melde dich an, damit dein Zugang und deine persönlichen Campus-Daten angezeigt werden.';
-
-  const naechster = dashboardNaechsterKurs();
-  const weiter = document.getElementById('dashboardWeiterlernenInhalt');
-  const weiterBtn = document.getElementById('dashboardWeiterBtn');
-  if (naechster) {
-    const prog = kursFortschritt(naechster);
-    const done = naechster.lektionen.filter((_, i) => istFertig(naechster.id, i)).length;
-    const cta = prog > 0 ? 'Weiterlernen' : 'Kurs starten';
-    weiterBtn.textContent = `▶ ${cta}`;
-    weiter.innerHTML = `
-      <div class="continue-card">
-        <div class="continue-cover" style="background:${naechster.cover}">${naechster.emoji}</div>
-        <div class="continue-copy">
-          <span class="kurs-thema">${themaName(naechster.thema)}</span>
-          <h3>${naechster.titel}</h3>
-          <p>${done} von ${naechster.lektionen.length} Lektionen abgeschlossen</p>
-          <div class="progress-track"><div class="progress-fill" style="width:${prog}%"></div></div>
-          <div class="progress-row"><span>Dein Fortschritt</span><strong>${prog}%</strong></div>
-          <div class="continue-actions"><button class="btn-dashboard-small" onclick="starteKurs('${naechster.id}')">${cta}</button><span style="font-size:.78rem;color:var(--tinte-soft)">${naechster.dauer}</span></div>
-        </div>
-      </div>`;
-  } else {
-    weiterBtn.textContent = 'Kurse entdecken';
-    weiter.innerHTML = '<div class="dashboard-empty"><div class="empty-icon">🎉</div><b>Alles abgeschlossen!</b><p>Du hast aktuell alle verfügbaren Kurse beendet.</p></div>';
-  }
-
-  const begonnen = KURSE.filter(k => kursFortschritt(k) > 0 || (k.frei && KURSE.indexOf(k) === 0));
+  const begonnen = KURSE.filter(k => kursFortschritt(k) > 0);
   document.getElementById('meineKurse').innerHTML = begonnen.length
-    ? begonnen.slice(0,5).map(k => {
-        const prog = kursFortschritt(k);
-        return `<button class="course-progress-item" onclick="starteKurs('${k.id}')" style="border:none;width:100%;text-align:left;color:inherit;font-family:inherit;cursor:pointer">
-          <span class="course-progress-emoji" style="background:${k.cover}">${k.emoji}</span>
-          <span class="course-progress-copy"><b>${k.titel}</b><span class="progress-track"><span class="progress-fill" style="display:block;width:${prog}%"></span></span></span>
-          <span class="course-progress-value">${prog}%</span>
-        </button>`;
-      }).join('')
-    : '<div class="dashboard-empty"><div class="empty-icon">📚</div><p>Du hast noch keinen Kurs begonnen.</p><br><button class="btn-dashboard-small" onclick="starteKurs(\'grundlagen\')">Ersten Kurs starten</button></div>';
-
-  const pass = document.getElementById('dashboardPassInhalt');
-  if (!aktuellerUser) {
-    pass.innerHTML = `<div class="pass-badge">🔐 Noch nicht angemeldet</div><div class="pass-status">Dein Zugang wartet</div><p style="color:rgba(255,255,255,.72);font-size:.86rem">Melde dich an, um deinen Campus-Pass anzuzeigen.</p><button class="btn-dashboard-main" style="margin-top:18px" onclick="authOeffnen('login')">Anmelden</button>`;
-  } else if (meinZugang && ['admin', 'team'].includes(meinZugang.role)) {
-    const rollenname = meinZugang.role === 'admin' ? 'Admin' : 'Team';
-    const rollenicon = meinZugang.role === 'admin' ? '👑' : '🤝';
-    pass.innerHTML = `<div class="pass-badge">${rollenicon} Zukunftszauber AI ${rollenname}</div><div class="pass-status"><span class="pass-status-dot"></span>Vollzugriff</div><div class="pass-meta"><div class="pass-meta-row"><span>Rolle</span><strong>${rollenname}</strong></div><div class="pass-meta-row"><span>Laufzeit</span><strong>Dauerhaft</strong></div><div class="pass-meta-row"><span>Kurszugang</span><strong>Alle 9 Kurse</strong></div></div>`;
-  } else if (meinZugang && meinZugang.access_status === 'active') {
-    const typ = meinZugang.access_type === 'lifetime' ? 'Lifetime Pass' : 'Monatlicher Campus Pass';
-    const laufzeit = meinZugang.access_type === 'lifetime' ? 'Dauerhaft aktiv' : formatiereCampusDatum(meinZugang.current_period_end);
-    const verwalten = meinZugang.access_type === 'monthly'
-      ? `<button class="pass-manage-btn" onclick="oeffneKundenportal(this)">Abo verwalten oder kündigen</button>`
-      : '';
-    pass.innerHTML = `<div class="pass-badge">✦ Zukunftszauber AI Mitglied</div><div class="pass-status"><span class="pass-status-dot"></span>Aktiver Zugang</div><div class="pass-meta"><div class="pass-meta-row"><span>Tarif</span><strong>${typ}</strong></div><div class="pass-meta-row"><span>Aktueller Zeitraum bis</span><strong>${laufzeit}</strong></div><div class="pass-meta-row"><span>Kurszugang</span><strong>Alle 9 Kurse</strong></div></div>${verwalten}`;
-  } else {
-    pass.innerHTML = `<div class="pass-badge">✨ Kostenloses Konto</div><div class="pass-status">Noch kein Campus Pass</div><p style="color:rgba(255,255,255,.72);font-size:.86rem">Schalte alle Premium-Kurse mit dem Campus Pass frei.</p><button class="btn-dashboard-main" style="margin-top:18px" onclick="zeigeView('preise')">Pass ansehen</button>`;
-  }
+    ? begonnen.map(kursKarteHTML).join('')
+    : '<div class="dash-karte" style="grid-column:1/-1;padding:44px;"><p style="font-size:1.05rem;">Du hast noch keinen Kurs begonnen. Der Grundlagenkurs wartet auf dich – kostenlos! </p><br><button class="btn btn-primary" onclick="starteKurs(\'grundlagen\')">Jetzt starten</button></div>';
 
   const zert = document.getElementById('zertifikatBereich');
   const fertigeKurse = KURSE.filter(k => kursFortschritt(k) === 100);
   zert.innerHTML = fertigeKurse.map(k => `
     <div class="zertifikat">
-      <div style="font-size:2.4rem;">🏆</div>
+      <div style="font-size:2.4rem;"></div>
       <h3>Zertifikat</h3>
       <p class="z-sub">Der Zukunftszauber AI Campus bestätigt den erfolgreichen Abschluss von</p>
       <div class="z-name">${k.titel}</div>
       <p class="z-sub">Ausgestellt am ${new Date().toLocaleDateString('de-DE')} · Zukunftszauber AI · Carolin Laux</p>
-      <br><button class="btn btn-ghost" onclick="toast('Die PDF-Zertifikate bauen wir im nächsten Schritt ein.')">Als PDF herunterladen</button>
+      <br><button class="btn btn-ghost" onclick="toast('Demo: Hier würde das PDF-Zertifikat erzeugt ')">Als PDF herunterladen</button>
     </div>`).join('');
 }
 
@@ -3523,258 +3205,60 @@ function renderAuthUI() {
     ziel.innerHTML = `<button class="nav-link" onclick="authOeffnen('login')">Anmelden</button>`;
   }
 }
-/* ---------------- Zugang und Rollen aus Supabase ---------------- */
-let meinZugang = null; // { role, access_type, access_status, current_period_end }
-
-function hatVollzugriffDurchRolle() {
-  return !!(meinZugang && ['admin', 'team'].includes(meinZugang.role));
-}
-
-function istAdmin() {
-  return !!(meinZugang && meinZugang.role === 'admin');
-}
-
-function aktualisiereAdminNavigation() {
-  const btn = document.getElementById('adminNavBtn');
-  if (btn) btn.style.display = istAdmin() ? '' : 'none';
-  if (!istAdmin() && document.getElementById('view-admin')?.classList.contains('aktiv')) {
-    zeigeView('start');
-  }
-}
-
-function hatZugang(kurs) {
-  if (kurs.frei) return true;
-  if (hatVollzugriffDurchRolle()) return true;
-  return !!(meinZugang && meinZugang.access_status === 'active');
-}
-
-async function ladeZugang() {
-  if (!aktuellerUser) { meinZugang = null; return; }
-  try {
-    const { data, error } = await supabaseClient
-      .from('profiles')
-      .select('role, access_type, access_status, current_period_end')
-      .eq('user_id', aktuellerUser.id)
-      .single();
-    if (error) { console.error('Zugang konnte nicht geladen werden:', error.message); meinZugang = null; return; }
-    meinZugang = data;
-  } catch (e) {
-    console.error('Zugang konnte nicht geladen werden:', e);
-    meinZugang = null;
-  }
-}
-
-async function aktualisiereNachAuthWechsel() {
-  // Alte Daten des vorherigen Kontos sofort verwerfen.
-  meinZugang = null;
-  fortschritt = { fertig: {}, quiz: {} };
-
-  ladeFortschritt();
-  await ladeZugang();
-
-  renderAuthUI();
-  aktualisiereAdminNavigation();
-  renderKurse();
-  renderHighlights();
-
-  if (document.getElementById('view-lernbereich').classList.contains('aktiv')) {
-    renderLernbereich();
-  }
-}
-
-async function pruefeCheckoutRueckkehr() {
-  const params = new URLSearchParams(window.location.search);
-  if (params.get('checkout') === 'success') {
-    toast('✦ Zahlung erfolgreich! Dein Zugang wird gerade freigeschaltet …');
-    // Der Webhook braucht meist nur Sekunden – kurz warten und dann neu laden.
-    setTimeout(async () => {
-      await aktualisiereNachAuthWechsel();
-      toast('✦ Dein Campus-Pass ist aktiv – viel Spaß mit allen Kursen!');
-    }, 2500);
-    window.history.replaceState({}, '', window.location.pathname);
-  } else if (params.get('checkout') === 'cancel') {
-    toast('Checkout abgebrochen – kein Problem, du kannst es jederzeit erneut versuchen.');
-    window.history.replaceState({}, '', window.location.pathname);
-  } else if (params.get('portal') === 'return') {
-    toast('Deine Aboverwaltung wurde geschlossen. Änderungen werden automatisch übernommen.');
-    setTimeout(aktualisiereNachAuthWechsel, 1200);
-    window.history.replaceState({}, '', window.location.pathname);
-  }
-}
-
 async function authInit() {
   const { data } = await supabaseClient.auth.getSession();
   aktuellerUser = data.session ? data.session.user : null;
-
-  // Fortschritt und Zugang immer passend zum aktuell angemeldeten Konto laden.
-  meinZugang = null;
-  ladeFortschritt();
-  await ladeZugang();
-
   renderAuthUI();
-  aktualisiereAdminNavigation();
-  renderKurse();
-  renderHighlights();
-
   supabaseClient.auth.onAuthStateChange((_event, session) => {
     aktuellerUser = session ? session.user : null;
-    aktualisiereNachAuthWechsel();
+    renderAuthUI();
   });
-
-  pruefeCheckoutRueckkehr();
 }
 
 
-let adminMitglieder = [];
+async function startCheckout(plan, button) {
+  const originalText = button.textContent;
 
-function escHtml(value) {
-  return String(value ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
-}
+  try {
+    button.disabled = true;
+    button.textContent = 'Checkout wird geöffnet …';
 
-async function adminApi(path, options = {}) {
-  const { data: { session } } = await supabaseClient.auth.getSession();
-  if (!session) throw new Error('Bitte erneut anmelden.');
-  const response = await fetch(path, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + session.access_token,
-      ...(options.headers || {})
+    const {
+      data: { session },
+      error: sessionError
+    } = await supabaseClient.auth.getSession();
+
+    if (sessionError || !session?.access_token) {
+      toast('Bitte melde dich zuerst im Campus an.');
+      return;
     }
-  });
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(data.error || 'Admin-Anfrage fehlgeschlagen.');
-  return data;
-}
 
-async function ladeAdminMitglieder() {
-  if (!istAdmin()) {
-    toast('Dieser Bereich ist nur für Administrator:innen.');
-    zeigeView('start');
-    return;
-  }
-  const body = document.getElementById('adminMitgliederBody');
-  if (body) body.innerHTML = '<tr><td colspan="6" class="admin-empty">Mitglieder werden geladen …</td></tr>';
-  try {
-    const data = await adminApi('/api/admin-members');
-    adminMitglieder = Array.isArray(data.members) ? data.members : [];
-    renderAdminMitglieder(adminMitglieder);
-  } catch (error) {
-    if (body) body.innerHTML = `<tr><td colspan="6" class="admin-empty">${escHtml(error.message)}</td></tr>`;
-    toast('Adminbereich: ' + error.message);
-  }
-}
-
-function filterAdminMitglieder() {
-  const q = (document.getElementById('adminSuche')?.value || '').trim().toLowerCase();
-  const liste = !q ? adminMitglieder : adminMitglieder.filter(m => (m.email || '').toLowerCase().includes(q));
-  renderAdminMitglieder(liste);
-}
-
-function renderAdminMitglieder(liste) {
-  document.getElementById('adminCountAll').textContent = adminMitglieder.length;
-  document.getElementById('adminCountTeam').textContent = adminMitglieder.filter(m => ['admin','team'].includes(m.role)).length;
-  document.getElementById('adminCountActive').textContent = adminMitglieder.filter(m => m.access_status === 'active' || ['admin','team'].includes(m.role)).length;
-  document.getElementById('adminCountMonthly').textContent = adminMitglieder.filter(m => m.access_type === 'monthly').length;
-  const body = document.getElementById('adminMitgliederBody');
-  if (!body) return;
-  if (!liste.length) {
-    body.innerHTML = '<tr><td colspan="6" class="admin-empty">Keine passenden Mitglieder gefunden.</td></tr>';
-    return;
-  }
-  body.innerHTML = liste.map(m => {
-    const created = m.created_at ? new Date(m.created_at).toLocaleDateString('de-DE') : '–';
-    const status = m.access_status || 'inactive';
-    const tarif = m.access_type === 'monthly' ? 'Monatlich' : m.access_type === 'lifetime' ? 'Lifetime' : 'Keiner';
-    return `<tr data-user-id="${escHtml(m.user_id)}">
-      <td><b>${escHtml(m.email || 'Ohne E-Mail')}</b></td>
-      <td><select class="admin-role" aria-label="Rolle">
-        <option value="member" ${m.role==='member'?'selected':''}>Mitglied</option>
-        <option value="team" ${m.role==='team'?'selected':''}>Team</option>
-        <option value="admin" ${m.role==='admin'?'selected':''}>Admin</option>
-      </select></td>
-      <td><select class="admin-status" aria-label="Zugang">
-        <option value="active" ${status==='active'?'selected':''}>Aktiv</option>
-        <option value="inactive" ${status!=='active'?'selected':''}>Gesperrt</option>
-      </select></td>
-      <td>${escHtml(tarif)}</td><td>${escHtml(created)}</td>
-      <td><button class="admin-save" onclick="speichereAdminMitglied(this)">Speichern</button></td>
-    </tr>`;
-  }).join('');
-}
-
-async function speichereAdminMitglied(btn) {
-  const row = btn.closest('tr');
-  const userId = row?.dataset.userId;
-  const role = row?.querySelector('.admin-role')?.value;
-  const access_status = row?.querySelector('.admin-status')?.value;
-  if (!userId || !role || !access_status) return;
-  const old = btn.textContent;
-  btn.disabled = true; btn.textContent = 'Speichert …';
-  try {
-    await adminApi('/api/admin-update-member', {
-      method:'POST',
-      body:JSON.stringify({ user_id:userId, role, access_status })
-    });
-    const member = adminMitglieder.find(m => m.user_id === userId);
-    if (member) { member.role = role; member.access_status = access_status; }
-    toast('✦ Mitglied wurde aktualisiert.');
-    renderAdminMitglieder(adminMitglieder);
-  } catch (error) {
-    toast('Speichern fehlgeschlagen: ' + error.message);
-    btn.disabled = false; btn.textContent = old;
-  }
-}
-
-async function oeffneKundenportal(btn) {
-  const { data: { session } } = await supabaseClient.auth.getSession();
-  if (!session) {
-    toast('Bitte melde dich erneut an.');
-    authOeffnen('login');
-    return;
-  }
-
-  const original = btn ? btn.textContent : '';
-  if (btn) { btn.disabled = true; btn.textContent = 'Wird geöffnet …'; }
-
-  try {
-    const antwort = await fetch('/api/create-customer-portal-session', {
+    const response = await fetch('/api/create-checkout-session', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + session.access_token
-      }
-    });
-    const daten = await antwort.json();
-    if (!antwort.ok || !daten.url) throw new Error(daten.error || 'Kundenportal konnte nicht geöffnet werden.');
-    window.location.href = daten.url;
-  } catch (e) {
-    toast('Fehler beim Öffnen der Aboverwaltung: ' + e.message);
-    if (btn) { btn.disabled = false; btn.textContent = original; }
-  }
-}
-
-async function starteCheckout(plan) {
-  const { data: { session } } = await supabaseClient.auth.getSession();
-  if (!session) {
-    toast('Bitte melde dich zuerst an, dann geht’s direkt zu Stripe.');
-    authOeffnen('login');
-    return;
-  }
-  try {
-    const antwort = await fetch('/api/create-checkout-session', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + session.access_token
+        Authorization: `Bearer ${session.access_token}`
       },
       body: JSON.stringify({ plan })
     });
-    const daten = await antwort.json();
-    if (!antwort.ok || !daten.url) throw new Error(daten.error || 'Checkout konnte nicht gestartet werden.');
-    window.location.href = daten.url;
-  } catch (e) {
-    toast('Fehler beim Checkout: ' + e.message);
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Checkout konnte nicht gestartet werden.');
+    }
+
+    if (!data.url) {
+      throw new Error('Stripe hat keine Checkout-Adresse zurückgegeben.');
+    }
+
+    window.location.href = data.url;
+  } catch (error) {
+    console.error('Checkout-Fehler:', error);
+    toast(error.message || 'Checkout konnte nicht gestartet werden.');
+  } finally {
+    button.disabled = false;
+    button.textContent = originalText;
   }
 }
 
